@@ -4,9 +4,18 @@ const bodyParser = require('body-parser')
 
 const cors = require('cors')
 
-const mongoose = require('mongoose')
-mongoose.connect(process.env.MLAB_URI || 'mongodb://localhost/exercise-track' )
+//Need dotenv for testing in windows
+require('dotenv').config();
 
+const mongoose = require('mongoose')
+//mongoose.connect(process.env.MLAB_URI || 'mongodb://localhost/exercise-track' )
+mongoose.connect(process.env.MLAB_URI, {useNewUrlParser: true}, function (err) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log("Connected");
+  }
+});
 app.use(cors())
 
 app.use(bodyParser.urlencoded({extended: false}))
