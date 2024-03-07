@@ -9,13 +9,14 @@ require('dotenv').config();
 
 const mongoose = require('mongoose')
 //mongoose.connect(process.env.MLAB_URI || 'mongodb://localhost/exercise-track' )
-mongoose.connect(process.env.MLAB_URI, {useNewUrlParser: true}, function (err) {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log("Connected");
-  }
-});
+// mongoose.connect(process.env.MLAB_URI, {useNewUrlParser: true}, function (err) {
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     console.log("Connected");
+//   }
+// });
+mongoose.connect(process.env.MLAB_URI).then(console.log('Connected')).catch(ex => console.error(ex));
 app.use(cors())
 
 app.use(bodyParser.urlencoded({extended: false}))
@@ -34,7 +35,7 @@ app.get('/', (req, res) => {
 })*/
 
 // Error Handling middleware
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   let errCode, errMessage
 
   if (err.errors) {
@@ -53,23 +54,23 @@ app.use((err, req, res, next) => {
 })
 
 //Schemas
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 //exUser
-var exUserSchema = Schema({
+const exUserSchema = Schema({
   usrName: { type: String, required: true }
 });
 
-var exUser = mongoose.model('exUser', exUserSchema);
+const exUser = mongoose.model('exUser', exUserSchema);
 
 //Exercises
-var exerciseSchema = Schema({
+const exerciseSchema = Schema({
   exUser: {type: mongoose.Schema.Types.ObjectId, ref: 'exUser', required: true},
   Description: {type:String, required: true},
   Duration: {type:Number, required: true},
   ExDate: Date
 });
 
-var exercise = mongoose.model('exercise', exerciseSchema);
+const exercise = mongoose.model('exercise', exerciseSchema);
 
 //Create a New User
 app.post('/api/exercise/new-user', function (req, res){
@@ -110,7 +111,7 @@ app.post("/api/exercise/add", function (req, res) {
       if (req.body.Date !== undefined) {
         d = req.body.Date;
       }
-      exercise.create({exUser: req.body.userId, Description: req.body.description, Duration: req.body.duration, ExDate: d}, function (err, data){
+      exercise.create({exUser: req.body.userId, Description: req.body.description, Duration: req.body.duration, ExDate: d}, function (err){
         if (err) {
           console.log(err);
           res.send(err);
