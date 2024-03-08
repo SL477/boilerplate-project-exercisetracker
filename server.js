@@ -20,7 +20,7 @@ app.use(cors());
 app.use(urlencoded({ extended: false }));
 app.use(express.static('public'));
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/views/index.html');
+    res.sendFile(process.cwd() + '/views/index.html');
 });
 
 // Not found middleware
